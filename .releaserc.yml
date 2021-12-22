@@ -1,0 +1,85 @@
+---
+branch: main
+preset: "angular"
+tagFormat: "${version}"
+plugins:
+  - "@semantic-release/commit-analyzer"
+  - "@semantic-release/release-notes-generator"
+  - - "@semantic-release/changelog"
+  - changelogTitle: |-
+      # Changelog
+
+        All notable changes to this project will be documented in this file. See
+      [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+  - "@semantic-release/git"
+  - "@semantic-release/github"
+
+verifyConditions:
+  - '@semantic-release/git'
+  - "@semantic-release/github"
+  - "@semantic-release/changelog"  
+analyzeCommits:
+  - path: "@semantic-release/commit-analyzer"
+    releaseRules:
+    - type: "feat"
+      release: "minor"
+    - type: "hotfix"
+      release: "patch"
+    - type: "patch"
+      release: "patch"
+    - type: "minor"
+      release: "minor"
+    - type: "breaking"
+      release: "major"
+    - type: "refactor"
+      release: "major"
+generateNotes:
+  - path: "@semantic-release/release-notes-generator"
+    writerOpts:
+      groupBy: "type"
+      commitGroupsSort:
+        - "breaking"
+        - "feat"
+        - "perf"
+        - "fix"
+      commitsSort: "header"
+    types:
+    # Tracked major breaking changes
+    - type: "breaking"
+    - section: "Major Version"
+    # Tracked Features
+    - type: "feat"
+    - section: "Features"
+    # Tracked bug fix with a hotfix branch
+    - type: "hotfix"
+    - section: "Bug Fixes"
+    - type: "fix"
+    - section: "Bug Fixes"
+    # Uninmportent fix (CI testing, etc)
+    - type: "chore"
+    - hidden: true
+    - type: "docs"
+    - hidden: true
+    - type: "doc"
+    - hidden: true
+    - type: "style"
+    - hidden: true
+    - type: "refactor"
+    - hidden: true
+    - type: "perf"
+    - hidden: true
+    - type: "test"
+    - hidden: true
+    presetConfig: true
+prepare:
+  - path: "@semantic-release/git"
+  - path: "@semantic-release/changelog"
+    changelogFile: "docs/CHANGELOG.md"
+publish:
+  - path: "@semantic-release/github"
+
+success:
+  - "@semantic-release/github"
+
+fail:
+  - "@semantic-release/github"
