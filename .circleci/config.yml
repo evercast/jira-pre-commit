@@ -1,0 +1,20 @@
+version: 2.1
+
+workflows:
+  terraform-versioning:
+    jobs:
+      - versioning:
+          filters: 
+            branches:
+              only: main
+          context:
+            - ci-cd-vars    
+
+jobs:
+  versioning:
+    docker:
+      - image: circleci/node:14
+    steps:
+      - checkout
+      - run: npm install semantic-release @semantic-release/changelog @semantic-release/git
+      - run: npx semantic-release --branches main
